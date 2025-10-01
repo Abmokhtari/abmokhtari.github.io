@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ماشین حساب ارث - طراحی شده توسط ابوالفضل مختاری</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+  <style>
+    :root {
+      --primary-purple: #8e44ad;
+      --dark-purple: #7d3c98;
+      --light-purple: #f3e5f5;
+      --green: #27ae60;
+      --blue: #2980b9;
+      --orange: #f39c12;
+      --red: #e74c3c;
+      --dark-gray: #2c3e50;
+      --light-gray: #ecf0f1;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      font-family: 'Vazir', 'Tahoma', sans-serif; 
+      direction: rtl; 
+      padding: 10px; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .developer-header {
+      background: linear-gradient(135deg, var(--dark-gray), #34495e);
+      color: var(--white);
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .developer-header span {
+      color: var(--green);
+      font-weight: bold;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+      color: var(--white);
+      padding: 30px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(180deg); }
+    }
+    
+    .header h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header p {
+      opacity: 0.9;
+      position: relative;
+      z-index: 2;
+      font-size: 14px;
+    }
+    
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--blue), var(--orange));
+    }
+    
+    .content {
+      padding: 20px 15px;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .section-header {
+      background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+      color: var(--white);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .section-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .section-header h2 {
+      font-size: 16px;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .icon {
+      font-size: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .section-body {
+      padding: 18px 15px;
+      background: var(--white);
+    }
+    
+    .input-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: var(--dark-gray);
+      font-size: 14px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e8e8e8;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: var(--light-gray);
+      font-family: 'Vazir', sans-serif;
+      text-align: right;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary-purple);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+      color: var(--white);
+      border: none;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(142, 68, 173, 0.3);
+      font-family: 'Vazir', sans-serif;
+      position: relative;
+      overflow: hidden;
+      display: block;
+      margin-top: 8px;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+      transform: translateX(-100%);
+    }
+    
+    .btn:hover::before {
+      animation: shine 1.5s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(142, 68, 173, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .result-box {
+      margin-top: 20px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 18px 15px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      border: 1px solid #f0f0f0;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .calculation-section {
+      background: linear-gradient(135deg, #e3f2fd, #f0f8ff);
+      padding: 15px 12px;
+      margin: 12px 0;
+      border-radius: 10px;
+      border-right: 3px solid var(--blue);
+    }
+    
+    .total-section {
+      background: linear-gradient(135deg, #fff8e1, #fffaf0);
+      padding: 15px 12px;
+      margin: 12px 0;
+      border-radius: 10px;
+      border-right: 3px solid var(--orange);
+      font-weight: bold;
+    }
+    
+    .protected {
+      background: linear-gradient(135deg, #fff8e1, #fffaf0);
+      padding: 16px 12px;
+      margin: 12px 0;
+      border-radius: 10px;
+      border-right: 3px solid #ffc107;
+      text-align: center;
+    }
+    
+    .hidden-content {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    .purple-button {
+      background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+      color: var(--white);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(142, 68, 173, 0.3);
+      font-family: 'Vazir', sans-serif;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      display: block;
+      margin-top: 8px;
+    }
+    
+    .purple-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 14px rgba(142, 68, 173, 0.4);
+    }
+    
+    .locked { color: #666; }
+    .unlocked { color: var(--blue); }
+    
+    .person-card {
+      background: var(--white);
+      padding: 14px 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border-right: 3px solid var(--green);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .person-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: inherit;
+      border-right: 3px solid;
+    }
+    
+    .person-card:hover {
+      transform: translateX(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    
+    .person-card.son {
+      border-right-color: var(--blue);
+    }
+    
+    .person-card.lawyer {
+      border-right-color: var(--orange);
+    }
+    
+    .person-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .person-info strong {
+      font-size: 14px;
+      display: block;
+    }
+    
+    .amount {
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--dark-gray);
+      direction: ltr;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+    
+    .amount-number {
+      font-family: 'Vazir', sans-serif;
+      white-space: nowrap;
+    }
+    
+    .amount-unit {
+      font-family: 'Vazir', sans-serif;
+      color: var(--dark-gray);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    
+    .note-box {
+      background: linear-gradient(135deg, #e8f5e8, #d4edda);
+      padding: 16px 14px;
+      border-radius: 10px;
+      margin: 16px 0;
+      border-right: 3px solid var(--green);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .note-box::before {
+      content: '💡';
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 18px;
+      opacity: 0.3;
+    }
+    
+    .note-box h3 {
+      color: #155724;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+    
+    .note-box p {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    
+    .summary-card {
+      background: var(--white);
+      padding: 16px 12px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      border: 1px solid #e8e8e8;
+      transition: all 0.3s ease;
+    }
+    
+    .summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+    }
+    
+    .summary-card h4 {
+      color: var(--dark-gray);
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .summary-card .value {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--primary-purple);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      direction: ltr;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 16px;
+      color: var(--dark-gray);
+      font-size: 13px;
+      opacity: 0.8;
+      border-top: 1px solid #e8e8e8;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+      
+      .container {
+        border-radius: 12px;
+      }
+      
+      .content {
+        padding: 15px 12px;
+      }
+      
+      .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .header h1 {
+        font-size: 20px;
+      }
+      
+      .section-header h2 {
+        font-size: 15px;
+      }
+      
+      .person-card {
+        padding: 12px 10px;
+      }
+      
+      .amount {
+        font-size: 14px;
+      }
+      
+      .person-info strong {
+        font-size: 13px;
+      }
+    }
+    
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="developer-header">
+      کد نویسی در گیت هاب : <span>ابوالفضل مختاری</span>
+    </div>
+    
+    <div class="header">
+      <h1>🧮 ماشین حساب ارث - تقسیم سهم الارث</h1>
+      <p>محاسبه دقیق سهم وراث با در نظرگیری تمام جوانب</p>
+    </div>
+    
+    <div class="content">
+      <!-- بخش اول -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">💰</span>
+          <h2>محاسبه اول - پرداختی اول با کسر طبقه همکف</h2>
+        </div>
+        <div class="section-body">
+          <div class="note-box">
+            <h3>📝 نکته مهم</h3>
+            <p>در پرداختی مرحله اول هر عددی را وارد کنید به صورت اتوماتیک مبلغ ۹۰,۰۰۰,۰۰۰ تومان از آن کسر میگردد. چون هزینه اجاره طبقه همکف مسکونی به مبلغ ماهیانه ۷,۵۰۰,۰۰۰ تومان بدون در نظر گرفتن پول پیش و پرداخت یکساله برای آن در نظر گرفته شده است که از این مبلغ وکیل سهمی نمیبرد.</p>
+          </div>
+          
+          <div class="input-group">
+            <label>مبلغ ورودی (تومان):</label>
+            <input type="text" id="amount" placeholder="مثلاً 300,000,000 یا ۳۰۰۰۰۰۰۰۰" inputmode="numeric">
+          </div>
+          
+          <button class="btn" onclick="calculate()">
+            <span class="btn-text">🔄 محاسبه سهم‌ها</span>
+          </button>
+          
+          <div id="result" class="result-box"></div>
+        </div>
+      </div>
+
+      <!-- بخش دوم -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">🏪</span>
+          <h2>محاسبه دوم - تقسیم پرداختی دوم مغازه با سهم وکیل</h2>
+        </div>
+        <div class="section-body">
+          <div class="input-group">
+            <label>مبلغ ورودی برای محاسبه دوم (تومان):</label>
+            <input type="text" id="amount2" placeholder="مثلاً 300,000,000 یا ۳۰۰۰۰۰۰۰۰" inputmode="numeric">
+          </div>
+          
+          <button class="btn" onclick="calculate2()">
+            <span class="btn-text">🔄 محاسبه سهم‌ها</span>
+          </button>
+          
+          <div id="result2" class="result-box"></div>
+        </div>
+      </div>
+
+      <!-- بخش سوم -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">👨‍👩‍👧‍👦</span>
+          <h2>محاسبه سوم - تقسیم نرمال بین وارثان (بدون وکیل)</h2>
+        </div>
+        <div class="section-body">
+          <div class="input-group">
+            <label>مبلغ ورودی برای محاسبه نرمال (تومان):</label>
+            <input type="text" id="amount3" placeholder="مثلاً 300,000,000 یا ۳۰۰۰۰۰۰۰۰" inputmode="numeric">
+          </div>
+          
+          <button class="btn" onclick="calculate3()">
+            <span class="btn-text">🔄 محاسبه تقسیم نرمال</span>
+          </button>
+          
+          <div id="result3" class="result-box"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      طراحی و توسعه توسط ابوالفضل مختاری | نسخه ۲.۰
+    </div>
+  </div>
+
+  <script>
+    let lawyerDetails = {};
+    let lawyerDetails2 = {};
+    
+    function convertPersianToEnglish(numberStr) {
+      const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+      
+      let result = numberStr;
+      for (let i = 0; i < 10; i++) {
+        let regex = new RegExp(persianNumbers[i], 'g');
+        result = result.replace(regex, englishNumbers[i]);
+      }
+      return result;
+    }
+
+    function formatCurrency(amount) {
+      return `<span class="amount-number">${Math.round(amount).toLocaleString('fa-IR')}</span><span class="amount-unit">تومان</span>`;
+    }
+
+    function showLawyerDetails() {
+      const password = prompt("لطفاً رمز عبور را وارد کنید:");
+      if (password === "2022" || password === "۱۴۰۱") {
+        document.getElementById('lawyer-secret-details').style.display = 'block';
+        document.getElementById('lock-icon').className = 'unlocked';
+        document.getElementById('lock-icon').innerHTML = '🔓 اطلاعات نمایش داده می‌شود';
+        document.getElementById('help-button').style.display = 'none';
+      } else {
+        alert("رمز عبور اشتباه است!");
+      }
+    }
+
+    function showLawyerDetails2() {
+      const password = prompt("لطفاً رمز عبور را وارد کنید:");
+      if (password === "2022" || password === "۱۴۰۱") {
+        document.getElementById('lawyer-secret-details2').style.display = 'block';
+        document.getElementById('lock-icon2').className = 'unlocked';
+        document.getElementById('lock-icon2').innerHTML = '🔓 اطلاعات نمایش داده می‌شود';
+        document.getElementById('help-button2').style.display = 'none';
+      } else {
+        alert("رمز عبور اشتباه است!");
+      }
+    }
+
+    function calculate() {
+      let inputValue = document.getElementById("amount").value;
+      
+      inputValue = convertPersianToEnglish(inputValue);
+      inputValue = inputValue.replace(/,/g, '').replace(/\s/g, '');
+      
+      let input = parseFloat(inputValue);
+      if (isNaN(input) || input <= 0) {
+        alert("لطفاً یک مبلغ معتبر وارد کنید");                      
+        return;
+      }
+
+      const groundFloorDeduction = 90000000;
+      let remainingAfterDeduction = input - groundFloorDeduction;
+
+      if (remainingAfterDeduction < 0) {
+        alert("مبلغ وارد شده باید بیشتر از ۹۰,۰۰۰,۰۰۰ تومان باشد");
+        return;
+      }
+
+      // محاسبات بخش اول
+      let daughter_part1 = remainingAfterDeduction / 8;
+      let son_part1 = daughter_part1 * 2;
+
+      let fatemeh_cut = daughter_part1 * 0.20;
+      let fatemeh_final_part1 = daughter_part1 - fatemeh_cut;
+
+      let others_cut = daughter_part1 * 0.25;
+      let tahereh_final_part1 = daughter_part1 - others_cut;
+      let fariba_final_part1 = daughter_part1 - others_cut;
+      let aghdas_final_part1 = daughter_part1 - others_cut;
+
+      let mojtaba_cut = son_part1 * 0.25;
+      let abolfazl_cut = son_part1 * 0.25;
+      let mojtaba_final_part1 = son_part1 - mojtaba_cut;
+      let abolfazl_final_part1 = son_part1 - abolfazl_cut;
+
+      let total_lawyer = fatemeh_cut + (others_cut * 3) + mojtaba_cut + abolfazl_cut;
+      let hamid = total_lawyer * 0.05;
+      let mom = total_lawyer * 0.05;
+      let lawyer_final = total_lawyer - hamid - mom;
+
+      // بخش دوم: تقسیم 90 میلیون
+      let daughter_part2 = groundFloorDeduction / 8;
+      let son_part2 = daughter_part2 * 2;
+
+      // محاسبه سهم نهایی
+      let fatemeh_final = Math.round(fatemeh_final_part1 + daughter_part2);
+      let tahereh_final = Math.round(tahereh_final_part1 + daughter_part2);
+      let fariba_final = Math.round(fariba_final_part1 + daughter_part2);
+      let aghdas_final = Math.round(aghdas_final_part1 + daughter_part2);
+      let mojtaba_final = Math.round(mojtaba_final_part1 + son_part2);
+      let abolfazl_final = Math.round(abolfazl_final_part1 + son_part2);
+
+      lawyerDetails = {
+        hamid: Math.round(hamid),
+        mom: Math.round(mom),
+        lawyer_final: Math.round(lawyer_final),
+        total_lawyer: Math.round(total_lawyer)
+      };
+
+      let result = `
+        <div class="summary-grid">
+          <div class="summary-card">
+            <h4>💰 مبلغ اولیه</h4>
+            <div class="value">${formatCurrency(input)}</div>
+          </div>
+          <div class="summary-card">
+            <h4>🏠 کسر طبقه همکف</h4>
+            <div class="value">${formatCurrency(groundFloorDeduction)}</div>
+          </div>
+        </div>
+        <div class="calculation-section">
+          <h3>📊 محاسبات بخش اول (پس از کسر ۹۰ میلیون)</h3>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فاطمه (۲۰٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(fatemeh_final_part1)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 طاهره (۲۵٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(tahereh_final_part1)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فریبا (۲۵٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(fariba_final_part1)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 اقدس (۲۵٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(aghdas_final_part1)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 مجتبی (۲۵٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(mojtaba_final_part1)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 ابوالفضل (۲۵٪ به وکیل):</strong>
+            </div>
+            <div class="amount">${formatCurrency(abolfazl_final_part1)}</div>
+          </div>
+        </div>
+        <div class="calculation-section">
+          <h3>🏠 محاسبات بخش دوم (تقسیم ۹۰ میلیون)</h3>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فاطمه:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_part2)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 طاهره:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_part2)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فریبا:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_part2)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 اقدس:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_part2)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 مجتبی:</strong>
+            </div>
+            <div class="amount">${formatCurrency(son_part2)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 ابوالفضل:</strong>
+            </div>
+            <div class="amount">${formatCurrency(son_part2)}</div>
+          </div>
+        </div>
+        <div class="total-section">
+          <h3>🎯 مجموع نهایی هر فرد</h3>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فاطمه:</strong>
+            </div>
+            <div class="amount">${formatCurrency(fatemeh_final)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 طاهره:</strong>
+            </div>
+            <div class="amount">${formatCurrency(tahereh_final)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 فریبا:</strong>
+            </div>
+            <div class="amount">${formatCurrency(fariba_final)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>👩 اقدس:</strong>
+            </div>
+            <div class="amount">${formatCurrency(aghdas_final)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 مجتبی:</strong>
+            </div>
+            <div class="amount">${formatCurrency(mojtaba_final)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>👨 ابوالفضل:</strong>
+            </div>
+            <div class="amount">${formatCurrency(abolfazl_final)}</div>
+          </div>
+        </div>
+        <div class="person-card lawyer">
+          <div class="person-info">
+            <strong>⚖️ مجموع دریافتی وکیل:</strong>
+          </div>
+          <div class="amount">${formatCurrency(lawyerDetails.total_lawyer)}</div>
+        </div>
+        <div class="protected">
+          <span id="lock-icon" class="locked">🔒</span><br>
+          <button id="help-button" onclick="showLawyerDetails()" class="purple-button">
+            🔐 نمایش جزئیات محرمانه
+          </button>
+          <div id="lawyer-secret-details" class="hidden-content">
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>بدهی جلیل به حمید:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails.hamid)}</div>
+            </div>
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>امتیاز جلیل به ابوالفضل:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails.mom)}</div>
+            </div>
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>مبلغ نهایی وکیل:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails.lawyer_final)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("result").innerHTML = result;
+    }
+
+    function calculate2() {
+      let inputValue = document.getElementById("amount2").value;
+      
+      inputValue = convertPersianToEnglish(inputValue);
+      inputValue = inputValue.replace(/,/g, '').replace(/\s/g, '');
+      
+      let input = parseFloat(inputValue);
+      if (isNaN(input) || input <= 0) {
+        alert("لطفاً یک مبلغ معتبر وارد کنید");                      
+        return;
+      }
+
+      let daughter = input / 8;
+      let son = daughter * 2;
+
+      let fatemeh_cut = daughter * 0.20;
+      let fatemeh_final = daughter - fatemeh_cut;
+
+      let others_cut = daughter * 0.25;
+      let tahereh_final = daughter - others_cut;
+      let fariba_final = daughter - others_cut;
+      let aghdas_final = daughter - others_cut;
+
+      let mojtaba_cut = son * 0.25;
+      let abolfazl_cut = son * 0.25;
+      let mojtaba_final = son - mojtaba_cut;
+      let abolfazl_final = son - abolfazl_cut;
+
+      let total_lawyer = fatemeh_cut + (others_cut * 3) + mojtaba_cut + abolfazl_cut;
+      let hamid = total_lawyer * 0.05;
+      let mom = total_lawyer * 0.05;
+      let lawyer_final = total_lawyer - hamid - mom;
+
+      lawyerDetails2 = {
+        hamid: Math.round(hamid),
+        mom: Math.round(mom),
+        lawyer_final: Math.round(lawyer_final),
+        total_lawyer: Math.round(total_lawyer)
+      };
+
+      let result = `
+        <div class="summary-grid">
+          <div class="summary-card">
+            <h4>💰 مبلغ کل</h4>
+            <div class="value">${formatCurrency(input)}</div>
+          </div>
+          <div class="summary-card">
+            <h4>⚖️ سهم وکیل</h4>
+            <div class="value">${formatCurrency(total_lawyer)}</div>
+          </div>
+        </div>
+        <h3>👥 تقسیم سهم‌ها</h3>
+        <div class="person-card">
+          <div class="person-info">
+            <strong>👩 فاطمه (۲۰٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(fatemeh_final)}</div>
+        </div>
+        <div class="person-card">
+          <div class="person-info">
+            <strong>👩 طاهره (۲۵٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(tahereh_final)}</div>
+        </div>
+        <div class="person-card">
+          <div class="person-info">
+            <strong>👩 فریبا (۲۵٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(fariba_final)}</div>
+        </div>
+        <div class="person-card">
+          <div class="person-info">
+            <strong>👩 اقدس (۲۵٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(aghdas_final)}</div>
+        </div>
+        <div class="person-card son">
+          <div class="person-info">
+            <strong>👨 مجتبی (۲۵٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(mojtaba_final)}</div>
+        </div>
+        <div class="person-card son">
+          <div class="person-info">
+            <strong>👨 ابوالفضل (۲۵٪ به وکیل):</strong>
+          </div>
+          <div class="amount">${formatCurrency(abolfazl_final)}</div>
+        </div>
+        <div class="person-card lawyer">
+          <div class="person-info">
+            <strong>⚖️ مجموع دریافتی وکیل:</strong>
+          </div>
+          <div class="amount">${formatCurrency(total_lawyer)}</div>
+        </div>
+        <div class="protected">
+          <span id="lock-icon2" class="locked">🔒</span><br>
+          <button id="help-button2" onclick="showLawyerDetails2()" class="purple-button">
+            🔐 نمایش جزئیات محرمانه
+          </button>
+          <div id="lawyer-secret-details2" class="hidden-content">
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>بدهی جلیل به حمید:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails2.hamid)}</div>
+            </div>
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>امتیاز جلیل به ابوالفضل:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails2.mom)}</div>
+            </div>
+            <div class="person-card lawyer">
+              <div class="person-info">
+                <strong>مبلغ نهایی وکیل:</strong>
+              </div>
+              <div class="amount">${formatCurrency(lawyerDetails2.lawyer_final)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("result2").innerHTML = result;
+    }
+
+    function calculate3() {
+      let inputValue = document.getElementById("amount3").value;
+      
+      inputValue = convertPersianToEnglish(inputValue);
+      inputValue = inputValue.replace(/,/g, '').replace(/\s/g, '');
+      
+      let input = parseFloat(inputValue);
+      if (isNaN(input) || input <= 0) {
+        alert("لطفاً یک مبلغ معتبر وارد کنید");                      
+        return;
+      }
+
+      let daughter_share = input / 8;
+      let son_share = daughter_share * 2;
+
+      let result = `
+        <div class="summary-grid">
+          <div class="summary-card">
+            <h4>💰 مبلغ کل</h4>
+            <div class="value">${formatCurrency(input)}</div>
+          </div>
+          <div class="summary-card">
+            <h4>🎯 ارزش هر سهم</h4>
+            <div class="value">${formatCurrency(daughter_share)}</div>
+          </div>
+        </div>
+        <div class="total-section">
+          <h3>👨‍👩‍👧‍👦 تقسیم نرمال بین وارثان</h3>
+          <p><strong>تعداد سهام:</strong> ۸ سهم (۴ دختر × ۱ سهم + ۲ پسر × ۲ سهم)</p>
+          
+          <h4>👩 دخترها (هرکدام ۱ سهم):</h4>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>فاطمه:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_share)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>طاهره:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_share)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>فریبا:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_share)}</div>
+          </div>
+          <div class="person-card">
+            <div class="person-info">
+              <strong>اقدس:</strong>
+            </div>
+            <div class="amount">${formatCurrency(daughter_share)}</div>
+          </div>
+          <h4>👨 پسرها (هرکدام ۲ سهم):</h4>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>مجتبی:</strong>
+            </div>
+            <div class="amount">${formatCurrency(son_share)}</div>
+          </div>
+          <div class="person-card son">
+            <div class="person-info">
+              <strong>ابوالفضل:</strong>
+            </div>
+            <div class="amount">${formatCurrency(son_share)}</div>
+          </div>
+          <div class="summary-grid" style="margin-top: 16px;">
+            <div class="summary-card">
+              <h4>👩 مجموع دخترها</h4>
+              <div class="value">${formatCurrency(daughter_share * 4)}</div>
+            </div>
+            <div class="summary-card">
+              <h4>👨 مجموع پسرها</h4>
+              <div class="value">${formatCurrency(son_share * 2)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("result3").innerHTML = result;
+    }
+  </script>
+</body>
+</html>
